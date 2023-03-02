@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -20,4 +21,21 @@ public class TaskService {
         return taskRepo.findAll();
     }
 
+    @Transactional
+    public Task save(Task task) {
+
+        return taskRepo.saveAndFlush(task);
+    }
+
+    @Transactional
+    public boolean existById(Long id) {
+
+        return taskRepo.existsById(id);
+    }
+
+    @Transactional
+    public Optional<Task> getTaskById(Long id) {
+
+        return taskRepo.findById(id);
+    }
 }
