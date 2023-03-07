@@ -1,5 +1,6 @@
 package com.taskmanager.auriga.service;
 
+import com.taskmanager.auriga.dto.CountType;
 import com.taskmanager.auriga.model.Task;
 import com.taskmanager.auriga.repository.TaskRepo;
 import jakarta.transaction.Transactional;
@@ -18,7 +19,7 @@ public class TaskService {
     @Transactional
     public List<Task> getTasks(){
 
-        return taskRepo.findAll();
+        return taskRepo.getAllTaskDueDateDesc();
     }
 
     @Transactional
@@ -37,5 +38,15 @@ public class TaskService {
     public Optional<Task> getTaskById(Long id) {
 
         return taskRepo.findById(id);
+    }
+
+    public void delete(Long id) {
+
+        taskRepo.deleteById(id);
+    }
+
+    public List<CountType> getGroupByType() {
+
+        return taskRepo.getGroupByType();
     }
 }

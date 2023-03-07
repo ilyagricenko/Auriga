@@ -1,5 +1,6 @@
 package com.taskmanager.auriga.controller;
 
+import com.taskmanager.auriga.dto.CountType;
 import com.taskmanager.auriga.model.Task;
 import com.taskmanager.auriga.service.TaskService;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,6 +20,12 @@ public class TaskController {
 
     private final TaskService taskService;
 
+    @GetMapping("/task/vData/percentage")
+    public List<CountType> getGroupByType() {
+
+        return taskService.getGroupByType();
+    }
+
     @GetMapping("/task")
     public List<Task> getTask() {
 
@@ -29,6 +36,13 @@ public class TaskController {
     public Task addTask(@RequestBody Task task) {
 
         return taskService.save(task);
+    }
+
+    @GetMapping("/task/{id}")
+    public Task getById(@PathVariable Long id) {
+
+        return taskService.getTaskById(id)
+                .orElseThrow(()->new EntityNotFoundException("Requested task not found"));
     }
 
     @PutMapping("/task/{id}")
@@ -46,6 +60,25 @@ public class TaskController {
             taskService.save(task);
 
             return ResponseEntity.ok().body(task);
+        } else {
+            HashMap<String, String> message = new HashMap<>();
+            message.put("message", id + " task not found");
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+        }
+    }
+
+    @DeleteMapping("/task/{id}")
+    public ResponseEntity<?> deleteTask(@PathVariable Long id) {
+
+        if(taskService.existById(id)) {
+
+            taskService.delete(id);
+
+            HashMap<String, String> message = new HashMap<>();
+            message.put("message", id + " task was deleted");
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
         } else {
             HashMap<String, String> message = new HashMap<>();
             message.put("message", id + "task not found");
